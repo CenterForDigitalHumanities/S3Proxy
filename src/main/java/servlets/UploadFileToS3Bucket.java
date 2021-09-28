@@ -1,22 +1,22 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import v0.s3proxy.S3Controller;
-import software.amazon.awssdk.transfer.s3.CompletedUpload;
 
 /**
  *
  * @author bhaberbe
  */
+@WebServlet(name = "UploadFileToS3Bucket", urlPatterns = {"/uploadFile"})
 public class UploadFileToS3Bucket extends HttpServlet {
 
     /**
@@ -30,32 +30,34 @@ public class UploadFileToS3Bucket extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        S3Controller bucket = new S3Controller();
-        CompletedUpload up = bucket.uploadFile("","");
-        /*
-        BufferedReader bodyReader = request.getReader();
-        StringBuilder bodyString = new StringBuilder();
-        JSONObject requestJSON = new JSONObject();
-        String requestString;
-        String line;
-        boolean moveOn = false;
-        while ((line = bodyReader.readLine()) != null)
-        {
-          bodyString.append(line);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet UploadFileToS3Bucket</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet UploadFileToS3Bucket at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        requestString = bodyString.toString();
-        try{ 
-            //JSONObject test
-            requestJSON = JSONObject.fromObject(requestString);
-            moveOn = true;
-        }
-        catch(Exception ex){
-            response.setStatus(500);
-            response.getWriter().print(ex);
-        }    
-        */
-        response.setHeader("Content-Type", "text/plain; charset=utf-8");
-        response.getWriter().print(up.response());
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
@@ -79,7 +81,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Connect to AWS S3 bucket and put a file in there.";
+        return "Short description";
     }// </editor-fold>
 
 }

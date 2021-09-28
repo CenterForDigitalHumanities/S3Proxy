@@ -7,6 +7,7 @@ package servlets;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.transfer.s3.CompletedDownload;
  *
  * @author bhaberbe
  */
+@WebServlet(name = "UploadFileToS3Bucket", urlPatterns = {"/downloadFile"})
 public class DownloadFileFromS3Bucket extends HttpServlet {
 
     /**
