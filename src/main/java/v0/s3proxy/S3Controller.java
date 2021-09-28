@@ -63,7 +63,7 @@ public class S3Controller {
         //How the TransferManager docs said to build this out for it when we have to provide the connection info
         S3ClientConfiguration s3Config =
             S3ClientConfiguration.builder()
-                .region(Region.US_WEST_1)
+                .region(region)
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
             .build();
         transferManager = S3TransferManager.builder().s3ClientConfiguration(s3Config).build(); 
@@ -72,7 +72,7 @@ public class S3Controller {
         //How the General AWS docs said to make the client.
         s3 = S3Client.builder()
             .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-            .region(Region.US_WEST_1)
+            .region(region)
             .build();
     }
     
@@ -91,6 +91,7 @@ public class S3Controller {
     public ArrayList<String> listBucketFiles(){
        ArrayList<String> filenames = new ArrayList<>();
        try {
+           System.out.println("Build out list of objects in bucket for bucket_name= "+bucket_name);
             ListObjectsRequest listObjects = ListObjectsRequest
                     .builder()
                     .bucket(bucket_name)

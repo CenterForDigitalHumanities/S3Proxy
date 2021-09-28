@@ -12,5 +12,5 @@ import software.amazon.awssdk.regions.Region;
  */
 public class Constant {
     public static String PROPERTIES_FILE_NAME = "s3.properties";
-    public static Region S3_BUCKET_REGION = Region.US_WEST_1;
+    public static Region S3_BUCKET_REGION = Region.US_EAST_1;
 }
