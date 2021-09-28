@@ -18,7 +18,7 @@ import software.amazon.awssdk.transfer.s3.CompletedDownload;
  *
  * @author bhaberbe
  */
-@WebServlet(name = "UploadFileToS3Bucket", urlPatterns = {"/downloadFile"})
+@WebServlet(name = "DownloadFileToS3Bucket", urlPatterns = {"/downloadFile"})
 public class DownloadFileFromS3Bucket extends HttpServlet {
 
     /**

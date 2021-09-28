@@ -45,7 +45,7 @@ public class TinyTokenManager{
             if you have it in Source Packages/java/tokens when you build.  That is how this will read it in without defining a root location
             https://stackoverflow.com/questions/2395737/java-relative-path-of-a-file-in-a-java-web-application
         */
-        String fileLoc =TinyTokenManager.class.getResource(Constant.PROPERTIES_FILE_NAME).toString();
+        String fileLoc = TinyTokenManager.class.getResource(Constant.PROPERTIES_FILE_NAME).toString();
         fileLoc = fileLoc.replace("file:", "");
         setFileLocation(fileLoc);
         InputStream input = new FileInputStream(propFileLocation);
