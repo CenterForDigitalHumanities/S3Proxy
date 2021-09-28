@@ -2,21 +2,13 @@
 package conn;
 
 import v0.s3proxy.Constant;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.util.Date;
 import java.util.Properties;
-import net.sf.json.JSONObject;
 import software.amazon.awssdk.regions.Region;
 
 /**
@@ -25,8 +17,6 @@ import software.amazon.awssdk.regions.Region;
  */
 public class TinyTokenManager{
     //Notice that when it is initialized, nothing is set.
-    private String currentAccessToken = "";
-    private String currentRefreshToken = "";
     private String currentS3AccessID = "";
     private String currentS3BucketName = "";
     private String currentS3Secret = "";
@@ -61,12 +51,10 @@ public class TinyTokenManager{
         InputStream input = new FileInputStream(propFileLocation);
         props.load(input);
         input.close();
-        currentAccessToken = props.getProperty("access_token");
-        currentRefreshToken = props.getProperty("refresh_token");
         currentS3AccessID = props.getProperty("s3_access_id");
         currentS3Secret = props.getProperty("s3_secret");
         currentS3BucketName = props.getProperty("s3_bucket_name");
-        currentS3Region = Region.US_WEST_2;
+        currentS3Region = Constant.S3_BUCKET_REGION;
         apiSetting = props.getProperty("open_api_cors");
         return props;
     }
@@ -92,28 +80,12 @@ public class TinyTokenManager{
         propFileLocation = location;
     }
     
-    public void setAccessToken(String newToken){
-        currentAccessToken = newToken;
-    }
-    
-    public void setRefreshToken(String newToken){
-        currentRefreshToken = newToken;
-    }
-    
     public String getAPISetting(){
         //ensure invalid strings result to false
         if(!apiSetting.equals("true")){
             apiSetting = "false";
         }
         return apiSetting;
-    }
-    
-    public String getAccessToken(){
-        return currentAccessToken;
-    }
-    
-    public String getRefreshToken(){
-        return currentRefreshToken;
     }
     
     public String getFileLocation(){
