@@ -4,7 +4,7 @@
  */
 package v0.s3proxy;
 
-import conn.TinyTokenManager;
+import conn.TinyManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -52,7 +52,7 @@ public class S3Controller {
             if you have it in Source Packages/java/tokens when you build.  That is how this will read it in without defining a root location
             https://stackoverflow.com/questions/2395737/java-relative-path-of-a-file-in-a-java-web-application
         */
-        TinyTokenManager manager = new TinyTokenManager();
+        TinyManager manager = new TinyManager();
         s3_access_id = manager.getS3AccessID();
         s3_secret = manager.getS3Secret();
         bucket_name = manager.getS3BucketName();
