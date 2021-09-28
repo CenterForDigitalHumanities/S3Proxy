@@ -8,6 +8,7 @@ package servlets;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import v0.s3proxy.S3Controller;
  *
  * @author bhaberbe
  */
+@WebServlet(name = "ListS3BucketFiles", urlPatterns = {"/listFiles"})
 public class ListS3BucketFiles extends HttpServlet {
 
     /**
