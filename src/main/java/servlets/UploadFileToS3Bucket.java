@@ -56,33 +56,44 @@ public class UploadFileToS3Bucket extends HttpServlet {
         
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         InputStream fileContent = filePart.getInputStream();
-        
+        System.out.println();
         System.out.println("Got file name and contents...");
         System.out.println(fileName);
+        
         StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(fileContent));
         String line;
         while ((line = br.readLine()) != null) {
             sb.append(line + System.lineSeparator());
         }
-        System.out.println("File contents...");
+        System.out.println();
+        System.out.println("File contents...may or may not be readable.  txt files are best to check this part with.");
         System.out.println(sb.toString());
         
         File tempFile = new File(fileName);
+        System.out.println();
         System.out.println("Made temporary File object...");
         FileUtils.copyInputStreamToFile(fileContent, tempFile);
         System.out.println("Populated temp file with contents...");
         System.out.println(tempFile);
         
         Path tempPath = Paths.get(tempFile.getAbsolutePath());
+        System.out.println();
         System.out.println("Made temporary Path object...");
         System.out.println(tempPath);
         
+        System.out.println();
+        System.out.println("Need to pick a way to invoke bucket.uploadFile...");
+        
         //CompletedUpload up = bucket.uploadFile(filepath,saveFileAs);
+        System.out.println("Choosing to send file part now...");
         CompletedUpload up = bucket.uploadFile(filePart);
         //CompletedUpload up = bucket.uploadFile(tempPath);
         //CompletedUpload up = bucket.uploadFile(tempFile);
+        System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
+        System.out.println(up.response().eTag());
         
+        //Not sure what content type this should be yet...we are sending a PutObjectResponse back
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
         response.getWriter().print(up.response());
     }
