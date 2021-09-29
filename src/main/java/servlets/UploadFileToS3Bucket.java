@@ -100,7 +100,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         System.out.println(up.response().eTag());
         
         //Note the stuff above is not optimized.  This leaves behind temp files in /CLASSPATHROOT/, they need to be removed.  We might not to generate temp files at all.
-        //tempFile.delete();     
+        tempFile.delete();     
         
         //Not sure what content type this should be yet...we are sending a PutObjectResponse back
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
