@@ -5,18 +5,22 @@
 package v0.s3proxy;
 
 import conn.TinyManager;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import javax.servlet.http.Part;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.transfer.s3.CompletedDownload;
@@ -25,6 +29,7 @@ import software.amazon.awssdk.transfer.s3.Download;
 import software.amazon.awssdk.transfer.s3.S3ClientConfiguration;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.Upload;
+import software.amazon.awssdk.transfer.s3.UploadRequest;
 
 /**
  *
@@ -35,8 +40,8 @@ public class S3Controller {
     private String s3_secret = "";
     private String bucket_name = "";
     private Region region;
-    private S3TransferManager transferManager;
-    private S3Client s3;
+    public S3TransferManager transferManager;
+    public S3Client s3;
     /**
      * Initializer for a TinyTokenManager that reads in the properties File
      * @throws IOException if no properties file
@@ -82,8 +87,76 @@ public class S3Controller {
         return completedDownload;
     }
     
-    public CompletedUpload uploadFile(String filename, String saveAs){
-        Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(saveAs)).source(Paths.get(saveAs)));
+    /**
+     * This is more for like when you have the file on the server this servlet is running on and want to upload it
+     * @param filename
+     * @param uploadAs
+     * @return 
+     */
+    public CompletedUpload uploadFile(String filename, String uploadAs){
+        Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(uploadAs)).source(Paths.get(uploadAs)));
+        CompletedUpload completedUpload = upload.completionFuture().join();
+        return completedUpload;
+    }
+    
+    /**
+     * You had a file in a File object and just want to upload that file!
+     * @param file
+     * @return 
+     */
+    public CompletedUpload uploadFile(File file){
+        System.out.println("Sent File to upload");
+        System.out.println(file);
+        final String name = file.getName();
+        PutObjectRequest pr = PutObjectRequest.builder()
+                .bucket(bucket_name)
+                .key(name)
+                .build();
+        UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(file.getPath())).build();
+        Upload upload = transferManager.upload(ur);
+        
+        //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
+        CompletedUpload completedUpload = upload.completionFuture().join();
+        return completedUpload;
+    }
+    
+    /**
+     * You had a file in a Path object and just want to upload that file!
+     * @param file
+     * @return 
+     */
+    public CompletedUpload uploadFile(Path file){
+        System.out.println("Sent Path to upload");
+        System.out.println(file);
+        PutObjectRequest pr = PutObjectRequest.builder()
+                .bucket(bucket_name)
+                .key(file.getFileName().toString())
+                .build();
+        UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(file).build();
+        Upload upload = transferManager.upload(ur);
+        
+        //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
+        CompletedUpload completedUpload = upload.completionFuture().join();
+        return completedUpload;
+    }
+    
+    /**
+     * You had a multipart file from a servlet request and passed it in.
+     * @param file
+     * @return 
+     */
+    public CompletedUpload uploadFile(Part file){
+        System.out.println("Sent Part to upload");
+        System.out.println(file);
+        String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+        PutObjectRequest pr = PutObjectRequest.builder()
+                .bucket(bucket_name)
+                .key(fileName)
+                .build();
+        UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(fileName)).build();
+        Upload upload = transferManager.upload(ur);
+        
+        //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
         CompletedUpload completedUpload = upload.completionFuture().join();
         return completedUpload;
     }
