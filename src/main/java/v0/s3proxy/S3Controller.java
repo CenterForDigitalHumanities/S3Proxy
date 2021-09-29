@@ -81,8 +81,26 @@ public class S3Controller {
             .build();
     }
     
+    /**
+     * This is more for like when you are putting the file on the server this servlet is running on, so you are downloading it there.
+     * @param filename
+     * @param uploadAs
+     * @return 
+     */
     public CompletedDownload downloadFile(String filename, String saveAs){
         Download download = transferManager.download(b -> b.getObjectRequest(r -> r.bucket(bucket_name).key(filename)).destination(Paths.get(saveAs)));
+        CompletedDownload completedDownload = download.completionFuture().join();
+        return completedDownload;
+    }
+    
+    /**
+     * Get the file from S3 onto the server as a temporary file.  Return that file.  Then delete the temporary.
+     * @param filename
+     * @param uploadAs
+     * @return 
+     */
+    public CompletedDownload downloadFile(String filename){
+        Download download = transferManager.download(b -> b.getObjectRequest(r -> r.bucket(bucket_name).key(filename)).destination(Paths.get("./"+filename)));
         CompletedDownload completedDownload = download.completionFuture().join();
         return completedDownload;
     }
@@ -105,7 +123,7 @@ public class S3Controller {
      * @return 
      */
     public CompletedUpload uploadFile(File file){
-        System.out.println("Sent File to upload");
+        System.out.println("S3Controller.uploadFile using a File Object");
         System.out.println(file);
         final String name = file.getName();
         PutObjectRequest pr = PutObjectRequest.builder()
@@ -125,7 +143,7 @@ public class S3Controller {
      * @return 
      */
     public CompletedUpload uploadFile(Path file){
-        System.out.println("Sent Path to upload");
+        System.out.println("S3Controller.uploadFile using a Path Object");
         System.out.println(file);
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
@@ -144,7 +162,7 @@ public class S3Controller {
      * @return 
      */
     public CompletedUpload uploadFile(Part file){
-        System.out.println("Sent Part to upload");
+        System.out.println("S3Controller.uploadFile using a Part Object");
         System.out.println(file);
         String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         PutObjectRequest pr = PutObjectRequest.builder()
@@ -170,7 +188,8 @@ public class S3Controller {
             List<S3Object> objects = res.contents();
             for (ListIterator iterVals = objects.listIterator(); iterVals.hasNext(); ) {
                 S3Object myValue = (S3Object) iterVals.next();
-                filenames.add(myValue.key() +"  "+calKb(myValue.size()) + " KBs");
+                filenames.add(myValue.key());
+                //filenames.add(myValue.key() +"  "+calKb(myValue.size()) + " KBs");
             }
         } 
         catch (S3Exception e) {
