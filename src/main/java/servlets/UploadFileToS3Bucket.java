@@ -51,7 +51,6 @@ public class UploadFileToS3Bucket extends HttpServlet {
         System.out.println("S3 UploadFileToS3Bucket.java");
         
         Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-        
         System.out.println("Got file part...");
         System.out.println(filePart);
         
@@ -80,11 +79,9 @@ public class UploadFileToS3Bucket extends HttpServlet {
         System.out.println(tempPath);
         
         //CompletedUpload up = bucket.uploadFile(filepath,saveFileAs);
-        //CompletedUpload up = bucket.uploadFile(filePart);
+        CompletedUpload up = bucket.uploadFile(filePart);
         //CompletedUpload up = bucket.uploadFile(tempPath);
         //CompletedUpload up = bucket.uploadFile(tempFile);
-        
-        
         
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
         response.getWriter().print(up.response());

@@ -114,7 +114,6 @@ public class S3Controller {
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(file.getPath())).build();
         Upload upload = transferManager.upload(ur);
-        
         //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
         CompletedUpload completedUpload = upload.completionFuture().join();
         return completedUpload;
@@ -134,7 +133,6 @@ public class S3Controller {
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(file).build();
         Upload upload = transferManager.upload(ur);
-        
         //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
         CompletedUpload completedUpload = upload.completionFuture().join();
         return completedUpload;
@@ -155,7 +153,6 @@ public class S3Controller {
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(fileName)).build();
         Upload upload = transferManager.upload(ur);
-        
         //Upload upload = transferManager.upload(b -> b.putObjectRequest(r -> r.bucket(bucket_name).key(name)).source(Paths.get(name)));
         CompletedUpload completedUpload = upload.completionFuture().join();
         return completedUpload;
