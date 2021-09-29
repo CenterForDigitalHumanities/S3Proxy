@@ -85,9 +85,6 @@ public class UploadFileToS3Bucket extends HttpServlet {
         System.out.println();
         System.out.println("Need to pick a way to invoke bucket.uploadFile...");
         
-        //System.out.println("Choosing just to send filePath and fileName")
-        //CompletedUpload up = bucket.uploadFile(filepath,saveFileAs);
-        
         //System.out.println("Choosing to send file part now...");
         //CompletedUpload up = bucket.uploadFile(filePart);
         
@@ -99,6 +96,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         CompletedUpload up = bucket.uploadFile(tempFile);
         
         System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
+        System.out.println(up.response());
         System.out.println(up.response().eTag());
         
         //Note the stuff above is not optimized.  This leaves behind temp files in /CLASSPATHROOT/, they need to be removed.  We might not to generate temp files at all.

@@ -20,6 +20,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -129,6 +130,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(name)
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(file.getPath())).build();
         Upload upload = transferManager.upload(ur);
@@ -148,6 +150,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(file.getFileName().toString())
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(file).build();
         Upload upload = transferManager.upload(ur);
@@ -168,6 +171,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(fileName)
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(fileName)).build();
         Upload upload = transferManager.upload(ur);
@@ -189,7 +193,6 @@ public class S3Controller {
             for (ListIterator iterVals = objects.listIterator(); iterVals.hasNext(); ) {
                 S3Object myValue = (S3Object) iterVals.next();
                 filenames.add(myValue.key());
-                //filenames.add(myValue.key() +"  "+calKb(myValue.size()) + " KBs");
             }
         } 
         catch (S3Exception e) {
