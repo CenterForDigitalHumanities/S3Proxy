@@ -130,7 +130,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(name)
-                .acl(ObjectCannedACL.PUBLIC_READ)
+                //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(file.getPath())).build();
         Upload upload = transferManager.upload(ur);

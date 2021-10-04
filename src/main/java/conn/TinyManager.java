@@ -40,11 +40,6 @@ public class TinyManager{
      * @throws IOException 
      */
     public final Properties init() throws FileNotFoundException, IOException{
-        /*
-            Your properties file must be in the deployed .war file in WEB-INF/classes/tokens.  It is there automatically
-            if you have it in Source Packages/java/tokens when you build.  That is how this will read it in without defining a root location
-            https://stackoverflow.com/questions/2395737/java-relative-path-of-a-file-in-a-java-web-application
-        */
         String fileLoc = TinyManager.class.getClassLoader().getResource(Constant.PROPERTIES_FILE_NAME).toString();
         System.out.println(fileLoc);
         fileLoc = fileLoc.replace("file:", "");
