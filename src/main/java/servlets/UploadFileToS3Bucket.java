@@ -68,10 +68,11 @@ public class UploadFileToS3Bucket extends HttpServlet {
         
         //Not sure what content type this should be yet...we are sending a PutObjectResponse back
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
-        response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Expose-Headers", "*");
         response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
         response.getWriter().print(up.response());
     }
 
