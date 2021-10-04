@@ -26,6 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.transfer.s3.CompletedUpload;
 import software.amazon.awssdk.transfer.s3.Upload;
+import v0.s3proxy.Constant;
 import v0.s3proxy.S3Controller;
 
 /**
@@ -104,6 +105,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         
         //Not sure what content type this should be yet...we are sending a PutObjectResponse back
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
+        response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
         response.getWriter().print(up.response());
     }
 

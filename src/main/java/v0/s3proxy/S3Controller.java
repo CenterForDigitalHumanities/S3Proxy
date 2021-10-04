@@ -192,6 +192,7 @@ public class S3Controller {
             List<S3Object> objects = res.contents();
             for (ListIterator iterVals = objects.listIterator(); iterVals.hasNext(); ) {
                 S3Object myValue = (S3Object) iterVals.next();
+                //filenames.add(Constant.S3_URI_PREFIX + myValue.key());
                 filenames.add(myValue.key());
             }
         } 
