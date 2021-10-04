@@ -4,16 +4,8 @@
  */
 package servlets;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -25,7 +17,6 @@ import javax.servlet.http.Part;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.transfer.s3.CompletedUpload;
-import software.amazon.awssdk.transfer.s3.Upload;
 import v0.s3proxy.Constant;
 import v0.s3proxy.S3Controller;
 
