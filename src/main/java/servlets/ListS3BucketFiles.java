@@ -37,6 +37,9 @@ public class ListS3BucketFiles extends HttpServlet {
         ArrayList<String> list = bucket.listBucketFiles();
         System.out.println(list);
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.getWriter().print(list);
     }
 
@@ -53,6 +56,26 @@ public class ListS3BucketFiles extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+    
+     /**
+     * Handles the HTTP <code>OPTIONS</code> preflight method.
+     * This should be a configurable option.  Turning this on means you
+     * intend for this version of Tiny Things to work like an open API.  
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //These headers must be present to pass browser preflight for CORS
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setStatus(200);
     }
 
     /**

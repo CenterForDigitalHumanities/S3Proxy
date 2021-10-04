@@ -7,6 +7,8 @@ package servlets;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -59,7 +61,6 @@ public class UploadFileToS3Bucket extends HttpServlet {
         CompletedUpload up = bucket.uploadFile(tempFile);
         
         System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
-        System.out.println(up.response());
         System.out.println(up.response().eTag());
         
         //Note the stuff above is not optimized.  This leaves behind temp files in /CLASSPATHROOT/, they need to be removed.  We might not to generate temp files at all.
@@ -68,6 +69,9 @@ public class UploadFileToS3Bucket extends HttpServlet {
         //Not sure what content type this should be yet...we are sending a PutObjectResponse back
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
         response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
         response.getWriter().print(up.response());
     }
 
@@ -83,6 +87,26 @@ public class UploadFileToS3Bucket extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+    
+    /**
+     * Handles the HTTP <code>OPTIONS</code> preflight method.
+     * This should be a configurable option.  Turning this on means you
+     * intend for this version of Tiny Things to work like an open API.  
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //These headers must be present to pass browser preflight for CORS
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setStatus(200);
     }
 
     /**
