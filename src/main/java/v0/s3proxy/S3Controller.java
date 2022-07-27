@@ -130,6 +130,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(name)
+                //This does not have to be set programmatically for the file to be available via URL. 
                 //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(file.getPath())).build();
@@ -150,7 +151,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(file.getFileName().toString())
-                .acl(ObjectCannedACL.PUBLIC_READ)
+                //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(file).build();
         Upload upload = transferManager.upload(ur);
@@ -171,7 +172,7 @@ public class S3Controller {
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(fileName)
-                .acl(ObjectCannedACL.PUBLIC_READ)
+                //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(fileName)).build();
         Upload upload = transferManager.upload(ur);
