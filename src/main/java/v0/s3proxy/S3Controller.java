@@ -123,13 +123,14 @@ public class S3Controller {
      * @param file
      * @return 
      */
-    public CompletedUpload uploadFile(File file){
+    public CompletedUpload uploadFile(File file, String type){
         System.out.println("S3Controller.uploadFile using a File Object");
         System.out.println(file);
         final String name = file.getName();
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(name)
+                .contentType(type)
                 //This does not have to be set programmatically for the file to be available via URL. 
                 //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
@@ -145,12 +146,13 @@ public class S3Controller {
      * @param file
      * @return 
      */
-    public CompletedUpload uploadFile(Path file){
+    public CompletedUpload uploadFile(Path file, String type){
         System.out.println("S3Controller.uploadFile using a Path Object");
         System.out.println(file);
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(file.getFileName().toString())
+                .contentType(type)
                 //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(file).build();
@@ -165,13 +167,14 @@ public class S3Controller {
      * @param file
      * @return 
      */
-    public CompletedUpload uploadFile(Part file){
+    public CompletedUpload uploadFile(Part file, String type){
         System.out.println("S3Controller.uploadFile using a Part Object");
         System.out.println(file);
         String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         PutObjectRequest pr = PutObjectRequest.builder()
                 .bucket(bucket_name)
                 .key(fileName)
+                .contentType(type)
                 //.acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         UploadRequest ur = UploadRequest.builder().putObjectRequest(pr).source(Paths.get(fileName)).build();

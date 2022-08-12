@@ -47,6 +47,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         
         Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+        String fileType = filePart.getContentType();
         System.out.println();
         System.out.println("Got file name...");
         System.out.println(fileName);
@@ -58,7 +59,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         System.out.println("Populated temp file with contents...");
         
         //CompletedUpload up = bucket.uploadFile(filePart);
-        CompletedUpload up = bucket.uploadFile(tempFile);
+        CompletedUpload up = bucket.uploadFile(tempFile, fileType);
         
         System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
         System.out.println(up.response().eTag());
