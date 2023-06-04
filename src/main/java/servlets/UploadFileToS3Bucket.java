@@ -40,7 +40,9 @@ public class UploadFileToS3Bucket extends HttpServlet {
             Part filePart = request.getPart("file");
             System.out.println(Paths.get(filePart.getSubmittedFileName()));
             System.out.println(Paths.get(filePart.getSubmittedFileName()).getFileName());
-
+            System.out.println("Walrus: ");
+            
+            // This is where we are broken
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             String fileType = filePart.getContentType();
             System.out.println("Got file name: " + fileName);

@@ -64,22 +64,34 @@ public class S3Controller {
         bucket_name = manager.getS3BucketName();
         region = manager.getS3Region();
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(s3_access_id,s3_secret);
+        System.out.println("Retrieved properties...");
+        System.out.println("s3_access_id is " + (s3_access_id.isEmpty() ? "empty" : "not empty"));
+        System.out.println("s3_secret is " + (s3_secret.isEmpty() ? "empty" : "not empty"));
+        System.out.println("bucket_name is " + (bucket_name.isEmpty() ? "empty" : "not empty"));
+        System.out.println("region is " + (region == null ? "null" : region.toString()));
         
         System.out.println("Build S3 Transfer Manager...");
         //How the TransferManager docs said to build this out for it when we have to provide the connection info
-        S3ClientConfiguration s3Config =
-            S3ClientConfiguration.builder()
+        try {
+            System.out.println("Building S3 Transfer Manager...");
+            S3ClientConfiguration s3Config = S3ClientConfiguration.builder()
                 .region(region)
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-            .build();
-        transferManager = S3TransferManager.builder().s3ClientConfiguration(s3Config).build(); 
-        
-        System.out.println("Build S3 Client...");
-        //How the General AWS docs said to make the client.
-        s3 = S3Client.builder()
-            .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-            .region(region)
-            .build();
+                .build();
+            transferManager = S3TransferManager.builder().s3ClientConfiguration(s3Config).build();
+            System.out.println("S3 Transfer Manager built successfully.");
+    
+            System.out.println("Building S3 Client...");
+            s3 = S3Client.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .region(region)
+                .build();
+            System.out.println("S3 Client built successfully.");
+        } catch (Exception e) {
+            System.err.println("Error occurred while initializing S3: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
     
     /**

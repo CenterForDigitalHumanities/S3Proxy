@@ -39,9 +39,10 @@ public class TinyManager{
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public final Properties init() throws FileNotFoundException, IOException{
+    public final Properties init() throws FileNotFoundException, IOException {
+        System.out.println("(TM) Initializing properties...");
         String fileLoc = TinyManager.class.getClassLoader().getResource(Constant.PROPERTIES_FILE_NAME).toString();
-        System.out.println(fileLoc);
+        System.out.println("(TM) Properties file location: " + fileLoc);
         fileLoc = fileLoc.replace("file:", "");
         setFileLocation(fileLoc);
         InputStream input = new FileInputStream(propFileLocation);
@@ -52,6 +53,7 @@ public class TinyManager{
         currentS3BucketName = props.getProperty("s3_bucket_name");
         currentS3Region = Constant.S3_BUCKET_REGION;
         apiSetting = props.getProperty("open_api_cors");
+        System.out.println("(TM) Properties initialized.");
         return props;
     }
     
@@ -62,17 +64,18 @@ public class TinyManager{
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public void writeProperty (String prop, String propValue) throws FileNotFoundException, IOException{
+    public void writeProperty (String prop, String propValue) throws FileNotFoundException, IOException {
+        System.out.println("(TM) Writing property: " + prop);
         OutputStream output = null;
         output = new FileOutputStream(propFileLocation);
-        // set the properties value
         props.setProperty(prop, propValue);
-        // save properties to propFileLocation
         props.store(output, null);
         output.close();
+        System.out.println("(TM) Property written.");
     }
     
-    public void setFileLocation(String location){
+    public void setFileLocation(String location) {
+        System.out.println("(TM) Setting file location to: " + location);
         propFileLocation = location;
     }
     
