@@ -71,6 +71,8 @@ public class ListS3BucketFiles extends HttpServlet {
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+                
         //These headers must be present to pass browser preflight for CORS
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");

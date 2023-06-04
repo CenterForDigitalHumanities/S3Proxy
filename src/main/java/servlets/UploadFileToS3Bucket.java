@@ -22,59 +22,58 @@ import software.amazon.awssdk.transfer.s3.CompletedUpload;
 import v0.s3proxy.Constant;
 import v0.s3proxy.S3Controller;
 
-/**
- *
- * @author bhaberbe
- */
 @WebServlet(name = "UploadFileToS3Bucket", urlPatterns = {"/uploadFile"})
 @MultipartConfig
 public class UploadFileToS3Bucket extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        S3Controller bucket = new S3Controller();
-        System.out.println("S3 UploadFileToS3Bucket.java");
-        
-        Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String fileType = filePart.getContentType();
-        System.out.println();
-        System.out.println("Got file name...");
-        System.out.println(fileName);
-        
-        File tempFile = new File(fileName);
-        System.out.println();
-        System.out.println("Made temporary File object...");
-        FileUtils.copyInputStreamToFile(filePart.getInputStream(), tempFile);
-        System.out.println("Populated temp file with contents...");
-        
-        //CompletedUpload up = bucket.uploadFile(filePart);
-        CompletedUpload up = bucket.uploadFile(tempFile, fileType);
-        
-        System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
-        System.out.println(up.response().eTag());
-        
-        //Note the stuff above is not optimized.  This leaves behind temp files in /CLASSPATHROOT/, they need to be removed.  We might not to generate temp files at all.
-        tempFile.delete();     
-        
-        //Not sure what content type this should be yet...we are sending a PutObjectResponse back
-        response.setHeader("Content-Type", "text/plain; charset=utf-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setHeader("Access-Control-Expose-Headers", "*");
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
-        response.getWriter().print(up.response());
+    throws ServletException, IOException {
+
+        try {
+            System.out.println("Request Method: " + request.getMethod());
+            System.out.println("Request URI: " + request.getRequestURI());
+            System.out.println("Request Protocol: " + request.getProtocol());
+            System.out.println("Remote Address: " + request.getRemoteAddr());
+
+            S3Controller bucket = new S3Controller();
+            System.out.println("S3 UploadFileToS3Bucket.java");
+            Part filePart = request.getPart("file");
+            System.out.println(Paths.get(filePart.getSubmittedFileName()));
+            System.out.println(Paths.get(filePart.getSubmittedFileName()).getFileName());
+
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileType = filePart.getContentType();
+            System.out.println("Got file name: " + fileName);
+
+            File tempFile = new File(fileName);
+            System.out.println("Created temporary File object...");
+
+            String tmpdir = System.getProperty("java.io.tmpdir");
+            System.out.println("Temp file path: " + tmpdir);
+
+            FileUtils.copyInputStreamToFile(filePart.getInputStream(), tempFile);
+            System.out.println("Populated temp file with contents...");
+
+            CompletedUpload up = bucket.uploadFile(tempFile, fileType);
+            System.out.println("Got completed upload back! Etag: " + up.response().eTag());
+
+            tempFile.delete();
+
+            response.setHeader("Content-Type", "text/plain; charset=utf-8");
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Expose-Headers", "*");
+            response.setHeader("Access-Control-Allow-Methods", "*");
+            response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
+            response.getWriter().print(up.response());
+
+            System.out.println("Response Status: " + response.getStatus());
+            System.out.println("Response Headers: " + response.getHeaderNames());
+        } catch(Exception e) {
+            System.err.println("Error during file upload:");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /**
