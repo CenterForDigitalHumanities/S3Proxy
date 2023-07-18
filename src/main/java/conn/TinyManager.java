@@ -41,7 +41,6 @@ public class TinyManager{
      */
     public final Properties init() throws FileNotFoundException, IOException{
         String fileLoc = TinyManager.class.getClassLoader().getResource(Constant.PROPERTIES_FILE_NAME).toString();
-        System.out.println(fileLoc);
         fileLoc = fileLoc.replace("file:", "");
         setFileLocation(fileLoc);
         InputStream input = new FileInputStream(propFileLocation);
