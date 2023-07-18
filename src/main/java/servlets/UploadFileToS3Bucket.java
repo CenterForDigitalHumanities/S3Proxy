@@ -43,7 +43,6 @@ public class UploadFileToS3Bucket extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         try{
             S3Controller bucket = new S3Controller();
             System.out.println("S3 UploadFileToS3Bucket.java");
@@ -53,43 +52,28 @@ public class UploadFileToS3Bucket extends HttpServlet {
             String tmpdir = System.getProperty("java.io.tmpdir") + FileSystems.getDefault().getSeparator();
             String fileName = tmpdir + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
             
-            System.out.println("java.io.tmpdir is: " + tmpdir);
             System.out.println("Got file name...");
             System.out.println(fileName);
-
+            
             File tempFile = new File(fileName);
-            System.out.println("Made File object from filename");
-            System.out.println("File object absolute path is: "+tempFile.getAbsolutePath());
-            
-            System.out.println("Getting the InputStream from filePart from request...");
             InputStream fis = filePart.getInputStream(); 
-            System.out.println("We got the input stream!");
-
-            System.out.println("Copying input stream to temp file with FileUtils...");
             FileUtils.copyInputStreamToFile(fis, tempFile);
-            System.out.println("Populated temp file with contents!");
-            System.out.println(tempFile.getAbsolutePath());
-            
-            //CompletedUpload up = bucket.uploadFile(filePart);
-            //CompletedUpload up = bucket.uploadFile(tempFile, fileType);
+            CompletedUpload up = bucket.uploadFile(tempFile, fileType);
 
-            //System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
-            //System.out.println(up.response().eTag());
+            System.out.println("Got completed upload back!  See Etag below, will exist if call was successful.");
+            System.out.println(up.response().eTag());
 
-            //Note the stuff above is not optimized.  This leaves behind temp files in /CLASSPATHROOT/, they need to be removed.  We might not to generate temp files at all.
-            //tempFile.delete();     
+            //Note the stuff above is not optimized.  This leaves behind temp files in 'tmpdir', they need to be removed.  We might not to generate temp files at all.
+            tempFile.delete();     
 
-            //Not sure what content type this should be yet...we are sending a PutObjectResponse back
             response.setHeader("Content-Type", "text/plain; charset=utf-8");
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Headers", "*");
             response.setHeader("Access-Control-Expose-Headers", "*");
             response.setHeader("Access-Control-Allow-Methods", "*");
             response.setHeader("Location", Constant.S3_URI_PREFIX + fileName);
-            response.getWriter().print("***** DONE *******");
-            //response.getWriter().print(up.response());
+            response.getWriter().print(up.response());
         }
-        
         catch(Exception e){
             System.out.println("The caught error is...");
             System.out.println(e);
