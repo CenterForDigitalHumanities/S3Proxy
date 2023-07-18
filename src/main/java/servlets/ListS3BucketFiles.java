@@ -35,7 +35,7 @@ public class ListS3BucketFiles extends HttpServlet {
         System.out.println("List files from S3 bucket...");
         S3Controller bucket = new S3Controller();
         ArrayList<String> list = bucket.listBucketFiles();
-        System.out.println(list);
+        System.out.println(list.size() + " S3 bucket files found");
         response.setHeader("Content-Type", "text/plain; charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");

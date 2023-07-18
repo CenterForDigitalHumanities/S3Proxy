@@ -187,7 +187,6 @@ public class S3Controller {
     public ArrayList<String> listBucketFiles(){
        ArrayList<String> filenames = new ArrayList<>();
        try {
-           System.out.println("Build out list of objects in bucket for bucket_name= "+bucket_name);
             ListObjectsRequest listObjects = ListObjectsRequest
                     .builder()
                     .bucket(bucket_name)
