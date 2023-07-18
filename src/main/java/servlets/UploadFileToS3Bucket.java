@@ -6,6 +6,7 @@ package servlets;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,9 +59,14 @@ public class UploadFileToS3Bucket extends HttpServlet {
             System.out.println("Made temporary File object...");
             String tmpdir = System.getProperty("java.io.tmpdir");
             System.out.println("Temp file path: " + tmpdir);
-        
-            System.out.println("Populated temp file with contents...");
-            FileUtils.copyInputStreamToFile(filePart.getInputStream(), tempFile);
+
+            System.out.println("Getting the InputStream...");
+            InputStream fis = filePart.getInputStream(); 
+            System.out.println("We got the input stream!");
+
+            System.out.println("Copying input stream to temp file with FileUtils...");
+            FileUtils.copyInputStreamToFile(fis, tempFile);
+            System.out.println("Populated temp file with contents!");
        
             //CompletedUpload up = bucket.uploadFile(filePart);
             CompletedUpload up = bucket.uploadFile(tempFile, fileType);
@@ -82,7 +88,7 @@ public class UploadFileToS3Bucket extends HttpServlet {
         }
         
         catch(Exception e){
-            System.out.println("Error from upload iss");
+            System.out.println("The caught error is...");
             System.out.println(e);
             throw e;
         }
