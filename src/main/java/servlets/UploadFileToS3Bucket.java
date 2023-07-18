@@ -50,12 +50,13 @@ public class UploadFileToS3Bucket extends HttpServlet {
             Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
             String fileType = filePart.getContentType();
             String tmpdir = System.getProperty("java.io.tmpdir") + FileSystems.getDefault().getSeparator();
-            String fileName = tmpdir + Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String fileLoc = tmpdir + fileName;
             
             System.out.println("Got file name...");
             System.out.println(fileName);
             
-            File tempFile = new File(fileName);
+            File tempFile = new File(fileLoc);
             InputStream fis = filePart.getInputStream(); 
             FileUtils.copyInputStreamToFile(fis, tempFile);
             CompletedUpload up = bucket.uploadFile(tempFile, fileType);
